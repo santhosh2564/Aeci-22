@@ -1,0 +1,122 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transcribe-audio",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "webhookId": "73c6b2b5-5d9c-4c4e-9b2a-8f5c3d2e1f4a"
+    },
+    {
+      "parameters": {
+        "model": "whisper-1",
+        "fileInputName": "audio",
+        "options": {
+          "language": "ta",
+          "responseFormat": "json"
+        }
+      },
+      "name": "OpenAI Whisper (Tamil)",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        300,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4-turbo-preview",
+        "messages": {
+          "message": [
+            {
+              "role": "system",
+              "content": "You are a medical translator. Translate the following Tamil text into English. Provide a clean translation for a doctor's use."
+            },
+            {
+              "role": "user",
+              "content": "={{$node[\"OpenAI Whisper (Tamil)\"].json[\"text\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Translate to English",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        500,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"transcription_ta\": \"{{$node[\\\"OpenAI Whisper (Tamil)\\\"].json[\\\"text\\\"]}}\",\n  \"transcription_en\": \"{{$node[\\\"Translate to English\\\"].json[\\\"content\\\"]}}\",\n  \"language\": \"ta-en\",\n  \"patientId\": \"{{$node[\\\"Webhook\\\"].json[\\\"body\\\"][\\\"patientId\\\"]}}\"\n}",
+        "options": {}
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        750,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Whisper (Tamil)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Whisper (Tamil)": {
+      "main": [
+        [
+          {
+            "node": "Translate to English",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translate to English": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
