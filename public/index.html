@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aravind Eye Hospital - AI Triage Kiosk</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <div class="header">
+                <img src="https://aravind.org/wp-content/themes/aravind/images/logo.png" alt="Aravind Eye Hospital Logo" class="logo">
+                <h1>AI Triage Kiosk</h1>
+            </div>
+            <div class="card">
+                <h2>Welcome</h2>
+                <p>Please enter your Patient ID or Phone Number to begin.</p>
+                <div class="input-group">
+                    <input type="text" id="patient-id" placeholder="Patient ID / Phone Number" autocomplete="off">
+                </div>
+                <button id="start-btn" class="btn btn-primary">Start</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <img src="https://aravind.org/wp-content/themes/aravind/images/logo.png" alt="Aravind Eye Hospital Logo" class="logo-small">
+                    <h2>AI Triage Assistance</h2>
+                </div>
+                <button id="logout-btn" class="btn btn-text">Exit</button>
+            </div>
+
+            <div class="patient-info">
+                <span>Patient: <strong id="display-patient-id"></strong></span>
+            </div>
+
+            <main class="main-content">
+                <div class="interaction-area">
+                    <div id="recording-status" class="status-indicator">
+                        <span class="dot"></span>
+                        <span class="status-text">Ready</span>
+                    </div>
+
+                    <div class="button-container">
+                        <button id="record-btn" class="record-button">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </div>
+                        </button>
+                        <p class="instruction">Press & Hold to Speak</p>
+                        <p id="timer" class="timer">00:00</p>
+                    </div>
+
+                    <canvas id="visualizer" class="visualizer"></canvas>
+                </div>
+
+                <div class="results-area">
+                    <div class="transcription-card">
+                        <h3>Transcription</h3>
+                        <div id="loader" class="loader hidden"></div>
+                        <div class="transcription-content">
+                            <div class="lang-section">
+                                <label>English</label>
+                                <p id="transcription-en" class="placeholder">Your transcription will appear here...</p>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="lang-section">
+                                <label>தமிழ் (Tamil)</label>
+                                <p id="transcription-ta" class="placeholder">உங்கள் உரை இங்கே தோன்றும்...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
